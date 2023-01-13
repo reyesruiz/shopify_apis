@@ -1,7 +1,6 @@
 '''
 Script with shopify functions
-Copyright 2022 Reyes Ruiz
-https://github.com/Los-Vaqueros-Western-Wear/Scripts
+Copyright 2023 Reyes Ruiz
 '''
 import sys
 import json
@@ -13,6 +12,7 @@ from com_digitalruiz_my_logger import my_logger
 
 LOGGER = my_logger.set_logger(module_name=sys.argv[0], loglevel='INFO')
 SHOPIFY_ADMIN_API_URL = shopify_http_client.set_shopify_admin_url()
+LOCATION = shopify_http_client.get_shopify_default_location()
 
 def create_product(data):
     '''
@@ -168,14 +168,14 @@ def get_all_products():
     LOGGER.critical("No products")
     return False
 
-def adjust_inventory(inventory_item_id, add_inventory_count, location):
+def adjust_inventory(inventory_item_id, add_inventory_count):
     '''
     Function to adjust inventory by certain quantity, default is 1
     https://shopify.dev/api/admin-rest/2022-10/resources/inventorylevel#post-inventory-levels-adjust
     '''
     url = '/'.join([SHOPIFY_ADMIN_API_URL, "inventory_levels", "adjust.json"])
     data = {}
-    data['location_id'] = location
+    data['location_id'] = LOCATION
     data['inventory_item_id'] = inventory_item_id
     data['available_adjustment'] = add_inventory_count
     content = shopify_http_client.post(url,data)
@@ -184,14 +184,14 @@ def adjust_inventory(inventory_item_id, add_inventory_count, location):
         return True
     return False
 
-def set_inventory(inventory_item_id, available, location):
+def set_inventory(inventory_item_id, available):
     '''
     Function to set inventory level
     https://shopify.dev/api/admin-rest/2022-10/resources/inventorylevel#post-inventory-levels-set
     '''
     url = '/'.join([SHOPIFY_ADMIN_API_URL, "inventory_levels", "set.json"])
     data = {}
-    data['location_id'] = location
+    data['location_id'] = LOCATION
     data['inventory_item_id'] = inventory_item_id
     data['available'] = available
     content = shopify_http_client.post(url,data)
