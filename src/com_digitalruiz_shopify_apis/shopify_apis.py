@@ -145,7 +145,7 @@ def get_all_products():
     and then save them to local file
     https://shopify.dev/api/admin-rest/2022-10/resources/product#get-products
     '''
-    file_name = ("all_products.json")
+    file_name = "all_products.json"
     products = []
     if Path(file_name).is_file():
         file_modified_time = os.path.getmtime(file_name)
@@ -156,7 +156,7 @@ def get_all_products():
                 if products:
                     return products
     url = '/'.join([SHOPIFY_ADMIN_API_URL, \
-            "products.json"])
+            "products.json?limit=250"])
     contents = shopify_http_client.get(url)
     products = []
     for content in contents:
