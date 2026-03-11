@@ -96,6 +96,18 @@ def get_product_metafields(product_id):
         metafields = metafields + json.loads(content)['metafields']
     return metafields
 
+def get_variant_metafields(variant_id):
+    '''
+    Gets metafields for a product
+    https://shopify.dev/api/admin-rest/2024-01/resources/metafield#get-blogs-blog-id-metafields
+    '''
+    url = '/'.join([SHOPIFY_ADMIN_API_URL, 'variants', str(variant_id), 'metafields.json'])
+    contents = shopify_http_client.get(url)
+    metafields = []
+    for content in contents:
+        metafields = metafields + json.loads(content)['metafields']
+    return metafields
+
 def create_product_metafield(product_id, data):
     '''
     Creates a new product metafield
@@ -112,9 +124,39 @@ def create_product_metafield(product_id, data):
         return metafields['metafield']['id']
     return False
 
+def create_variant_metafield(variant_id, data):
+    '''
+    Creates a new variant metafield
+    https://shopify.dev/api/admin-rest/2024-01/resources/metafield#post-metafields
+    '''
+    url = '/'.join([SHOPIFY_ADMIN_API_URL, \
+            'variants', \
+            str(variant_id), \
+            'metafields.json'\
+            ])
+    content = shopify_http_client.post(url, data)
+    if content:
+        metafields = json.loads(content)
+        return metafields['metafield']['id']
+    return False
+
 def update_product_metafield(metafield_id, data):
     '''
     Updates product metafield
+    https://shopify.dev/api/admin-rest/2022-10/resources/metafield#put-metafields-metafield-id
+    '''
+    url = '/'.join([SHOPIFY_ADMIN_API_URL, \
+            'metafields', \
+            str(metafield_id) + '.json'\
+            ])
+    content = shopify_http_client.put(url, data)
+    if content:
+        return True
+    return False
+
+def update_variant_metafield(metafield_id, data):
+    '''
+    Updates variant metafield
     https://shopify.dev/api/admin-rest/2022-10/resources/metafield#put-metafields-metafield-id
     '''
     url = '/'.join([SHOPIFY_ADMIN_API_URL, \
