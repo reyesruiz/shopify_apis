@@ -14,12 +14,20 @@ LOGGER = my_logger.set_logger(module_name=sys.argv[0], loglevel='INFO')
 SHOPIFY_ADMIN_API_URL = shopify_http_client.set_shopify_admin_url()
 LOCATION = shopify_http_client.get_shopify_default_location()
 
+def graphql_post(payload):
+    '''
+    Posts a a graphql payload to Shopify
+    '''
+    url = '/'.join([SHOPIFY_ADMIN_API_URL, "graphql.json"])
+    content = shopify_http_client.post(url, payload)
+    return content
+
 def create_product(data):
     '''
     Creates a new shopify product
     https://shopify.dev/api/admin-rest/2022-10/resources/product#post-products
     '''
-    url = '/'.join([SHOPIFY_ADMIN_API_URL, "products.json"])
+    url = '/'.join([SHOPIFY_ADMIN_API_URL, "graphql.json"])
     content = shopify_http_client.post(url, data)
     return content
 
